@@ -11,8 +11,8 @@
         <h2>Palkkasovellus</h2>
         <ul>
             <li onclick="showPage('palkanlaskenta')">Palkanlaskenta</li>
+            <li onclick="showPage('henkilotiedot')">Henkilötiedot</li>
             <li onclick="showPage('raportit')">Raportit</li>
-            <li onclick="showPage('rekisterit')">Rekisterit</li>
             <li onclick="showPage('asetukset')">Asetukset</li>
         </ul>
     </div>
@@ -28,9 +28,38 @@
                 <tr><td>Matti</td><td>95</td><td>15</td><td>4</td><td>1</td><td>1700</td></tr>
             </table>
         </div>
-        <div id="raportit" class="page"><h1>Raportit</h1></div>
-        <div id="rekisterit" class="page"><h1>Rekisterit</h1></div>
-        <div id="asetukset" class="page"><h1>Asetukset</h1></div>
+        <div id="henkilotiedot" class="page">
+            <h1>Henkilötiedot</h1>
+            <form class="form-grid">
+                <label>Käyttäjätunnus <input type="text"></label>
+                <label>Etunimi <input type="text"></label>
+                <label>Keskinimet <input type="text"></label>
+                <label>Sukunimi <input type="text"></label>
+                <label>Näytettävä nimi <input type="text"></label>
+                <label>Osoite <input type="text"></label>
+                <label>Postinumero <input type="text"></label>
+                <label>Toimipaikka <input type="text"></label>
+                <label>Puhelin <input type="text"></label>
+                <label>Matkapuhelin <input type="text"></label>
+                <label>BIC <input type="text"></label>
+                <label>IBAN <input type="text"></label>
+            </form>
+        </div>
+        <div id="raportit" class="page">
+            <h1>Raportit</h1>
+            <ul>
+                <li>Palkkakortti</li>
+                <li>Palkanmaksulista</li>
+                <li>Tulorekisteri</li>
+                <li>Keskituntiansiolaskelma</li>
+                <li>Eläkemaksulaskelma</li>
+            </ul>
+        </div>
+        <div id="asetukset" class="page">
+            <h1>Asetukset</h1>
+            <p>Yleiset: Tulostuspohjat, Sivuston asetukset, Varmuuskopio</p>
+            <p>Sovellusasetukset: Kello, Palkka, Raportti</p>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
