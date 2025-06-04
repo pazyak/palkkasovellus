@@ -1,7 +1,23 @@
 function showPage(id) {
   const pages = document.querySelectorAll(".page");
   pages.forEach(p => p.style.display = "none");
-  document.getElementById(id).style.display = "block";
+  const target = document.getElementById(id);
+  if (target) target.style.display = "block";
+}
+
+async function loadEmployeeDropdown() {
+  const select = document.getElementById("employeeSelect");
+  if (!select) return;
+  select.innerHTML = '<option value="">-- Valitse --</option>';
+  const { data, error } = await supabase.from("henkilot").select("id, nimi");
+  if (data) {
+    data.forEach(emp => {
+      const opt = document.createElement("option");
+      opt.value = emp.id;
+      opt.textContent = emp.nimi;
+      select.appendChild(opt);
+    });
+  }
 }
 
 async function fetchHenkilot() {
@@ -60,7 +76,7 @@ async function saveHenkilo() {
   };
 
   if (id) {
-    henkilo.id = id; // existing = update
+    henkilo.id = id;
   }
 
   const { error } = await supabase.from("henkilot").upsert(henkilo);
@@ -73,6 +89,7 @@ async function saveHenkilo() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  showPage("rekisterit");  // Default page
   loadEmployeeDropdown();
   fetchHenkilot();
 });
