@@ -1,64 +1,59 @@
-const supa = supabase.createClient(
+const supabase = supabase.createClient(
   "https://ltjvqxboupoxurmknouy.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0anZxeGJvdXBveHVybWtub3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNDM0MjEsImV4cCI6MjA2NDYxOTQyMX0.QFx2O48MZfGSESTCmhFzVdNrmuQELI1hmpumRDBytMo"
 );
 
-function showPage(id) {
-  document.querySelectorAll(".page").forEach(p => p.style.display = "none");
-  document.getElementById(id).style.display = "block";
-  if (id === "palkanlaskenta") fetchHenkilot();
-  if (id === "kello") loadEmployeeDropdown();
-}
-
 async function fetchHenkilot() {
-  const tbody = document.getElementById("henkilot-body");
-  const { data, error } = await supa.from("henkilot").select("*");
+  const { data, error } = await supabase.from("henkilot").select("*");
+  console.log("Henkilöt:", data, error);
+  const tbody = document.querySelector("#employee-table tbody");
+  if (!tbody) return;
   tbody.innerHTML = "";
   if (data) {
-    data.forEach(h => {
+    data.forEach(emp => {
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td>${h.nimi}</td>
-        <td>${h.email}</td>
-        <td>${h.osoite}</td>
-        <td>${h.toimipaikka}</td>
-        <td><button onclick="editHenkilo('${h.id}', '${h.nimi}', '${h.email}', '${h.osoite}', '${h.toimipaikka}')">Muokkaa</button></td>
+        <td>${emp.nimi}</td>
+        <td>${emp.email}</td>
+        <td>${emp.osoite}</td>
+        <td>${emp.toimipaikka}</td>
+        <td>
+          <button onclick="editEmployee('${emp.id}', '${emp.nimi}', '${emp.email}', '${emp.osoite}', '${emp.toimipaikka}')">Muokkaa</button>
+        </td>
       `;
       tbody.appendChild(row);
     });
   }
 }
 
-async function loadEmployeeDropdown() {
-  const select = document.getElementById("employeeSelect");
-  const { data } = await supa.from("henkilot").select("id, nimi");
-  select.innerHTML = '<option value="">-- Valitse --</option>';
-  if (data) {
-    data.forEach(emp => {
-      const opt = document.createElement("option");
-      opt.value = emp.id;
-      opt.textContent = emp.nimi;
-      select.appendChild(opt);
-    });
-  }
+function showPage(id) {
+  document.querySelectorAll(".page").forEach(page => {
+    page.style.display = "none";
+  });
+  document.getElementById(id).style.display = "block";
+  if (id === "palkanlaskenta") fetchHenkilot();
 }
 
 function showForm() {
+  document.getElementById("form-modal").style.display = "block";
   document.getElementById("emp-id").value = "";
   document.getElementById("emp-nimi").value = "";
   document.getElementById("emp-email").value = "";
   document.getElementById("emp-osoite").value = "";
   document.getElementById("emp-toimipaikka").value = "";
-  document.getElementById("form-modal").style.display = "block";
 }
 
-function editHenkilo(id, nimi, email, osoite, toimipaikka) {
+function closeForm() {
+  document.getElementById("form-modal").style.display = "none";
+}
+
+function editEmployee(id, nimi, email, osoite, toimipaikka) {
   document.getElementById("emp-id").value = id;
   document.getElementById("emp-nimi").value = nimi;
   document.getElementById("emp-email").value = email;
   document.getElementById("emp-osoite").value = osoite;
   document.getElementById("emp-toimipaikka").value = toimipaikka;
-  document.getElementById("form-modal").style.display = "block";
+  showForm();
 }
 
 async function saveEmployee() {
@@ -70,16 +65,13 @@ async function saveEmployee() {
     toimipaikka: document.getElementById("emp-toimipaikka").value
   };
   if (id) data.id = id;
-
-  const { error } = await supa.from("henkilot").upsert(data);
+  const { error } = await supabase.from("henkilot").upsert(data);
   if (!error) {
-    document.getElementById("form-modal").style.display = "none";
+    closeForm();
     fetchHenkilot();
+  } else {
+    alert("Virhe tallennuksessa");
   }
-}
-
-function closeForm() {
-  document.getElementById("form-modal").style.display = "none";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
