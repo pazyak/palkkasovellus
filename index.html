@@ -1,110 +1,16 @@
-
 <!DOCTYPE html>
 <html lang="fi">
 <head>
-    <meta charset="UTF-8">
-    <title>Palkkasovellus</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Palkkasovellus – ilman kirjautumista</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="login" class="page">
-        <h1>Kirjaudu sisään</h1>
-        <form onsubmit="return loginUser()" class="form-grid">
-            <label>Sähköposti <input type="email" id="email" required></label>
-            <label>Salasana <input type="password" id="password" required></label>
-            <button type="submit">Kirjaudu sisään</button>
-        </form>
-        <div id="login-error" style="color: red; margin-top: 10px;"></div>
+    <div id="app" style="display: block;">
+        <h1>Tervetuloa Palkkasovellukseen</h1>
+        <p>Sovellus ilman kirjautumista toimii!</p>
     </div>
-
-    <div id="app" style="display:none;">
-        <nav>
-            <ul>
-                <li onclick="showPage('palkanlaskenta')">Palkanlaskenta</li>
-                <li onclick="showPage('palkkalista')">Palkkalista</li>
-                <li onclick="showPage('henkilot')">Henkilöt</li>
-                <li onclick="logout()">Kirjaudu ulos</li>
-            </ul>
-        </nav>
-
-        <div id="palkanlaskenta" class="page">
-            <h1>Palkanlaskenta</h1>
-            <form class="form-grid" id="salaryForm" onsubmit="calculateSalary(); return false;">
-                <label>Henkilö <select id="henkiloSelect" required><option value="">Valitse henkilö</option></select></label>
-                <label>Tunnit <input type="number" id="hours" required></label>
-                <label>Tuntipalkka (€) <input type="number" id="rate" required></label>
-                <label>Iltalisä (€) <input type="number" id="evening" value="0"></label>
-                <label>Yölisä (€) <input type="number" id="night" value="0"></label>
-                <label>Pyhälisä (€) <input type="number" id="holiday" value="0"></label>
-                <label>Veroprosentti (%) <input type="number" id="tax" value="20"></label>
-                <label>TyEL (%) <input type="number" id="tyel" value="7.15"></label>
-                <label>Työttömyys (%) <input type="number" id="unemployment" value="1.5"></label>
-                <button type="submit">Laske palkka</button>
-            </form>
-            <div id="result" style="margin-top:20px;"></div>
-            <button onclick="downloadPDF()">⭳ Lataa PDF</button>
-        </div>
-
-        <div id="palkkalista" class="page" style="display:none;">
-            <h1>Palkkalista</h1>
-            <table id="salaryTable" border="1" cellpadding="5" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>Nimi</th><th>Tunnit</th><th>Tuntipalkka</th><th>Brutto</th><th>Vähennykset</th><th>Netto</th><th>Päivä</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-
-        <div id="henkilot" class="page" style="display:none;">
-            <h1>Henkilöt</h1>
-            <form class="form-grid" id="henkiloForm" onsubmit="saveHenkilo(); return false;">
-                <label>Nimi <input type="text" id="hnimi" required></label>
-                <label>Sähköposti <input type="email" id="hemail" required></label>
-                <label>Puhelin <input type="text" id="hpuhelin"></label>
-                <label>IBAN <input type="text" id="hiban" required></label>
-                <label>BBAN <input type="text" id="hbban"></label>
-                <label>Veroprosentti <input type="number" id="hvero" required></label>
-                <label>Osoite <input type="text" id="hosoite"></label>
-                <label>Postinumero <input type="text" id="hposti"></label>
-                <label>Toimipaikka <input type="text" id="htoimi"></label>
-                <button type="submit">Tallenna</button>
-            </form>
-            <table id="henkiloTable" border="1" cellpadding="5" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>Nimi</th><th>Email</th><th>IBAN</th><th>Veropros.</th><th>Osoite</th><th>Poista</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script src="script.js"></script>
-
-<!-- Muokkausmodal -->
-<div id="editModal" class="modal" style="display:none;">
-    <div class="modal-content">
-        <h2>Muokkaa henkilöä</h2>
-        <form id="editForm" onsubmit="updateHenkilo(); return false;">
-            <input type="hidden" id="editId">
-            <label>Nimi <input type="text" id="editNimi" required></label>
-            <label>Sähköposti <input type="email" id="editEmail" required></label>
-            <label>Puhelin <input type="text" id="editPuhelin"></label>
-            <label>IBAN <input type="text" id="editIban" required></label>
-            <label>BBAN <input type="text" id="editBban"></label>
-            <label>Veroprosentti <input type="number" id="editVero" required></label>
-            <label>Osoite <input type="text" id="editOsoite"></label>
-            <label>Postinumero <input type="text" id="editPosti"></label>
-            <label>Toimipaikka <input type="text" id="editToimi"></label>
-            <button type="submit">Tallenna muutokset</button>
-            <button type="button" onclick="closeModal()">Peruuta</button>
-        </form>
-    </div>
-</div>
 </body>
-
 </html>
