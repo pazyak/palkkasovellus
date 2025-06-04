@@ -21,9 +21,11 @@
         <nav>
             <ul>
                 <li onclick="showPage('palkanlaskenta')">Palkanlaskenta</li>
+                <li onclick="showPage('palkkalista')">Palkkalista</li>
                 <li onclick="logout()">Kirjaudu ulos</li>
             </ul>
         </nav>
+
         <div id="palkanlaskenta" class="page">
             <h1>Palkanlaskenta</h1>
             <form class="form-grid" id="salaryForm" onsubmit="calculateSalary(); return false;">
@@ -40,6 +42,18 @@
             </form>
             <div id="result" style="margin-top:20px;"></div>
             <button onclick="downloadPDF()">⭳ Lataa PDF</button>
+        </div>
+
+        <div id="palkkalista" class="page" style="display:none;">
+            <h1>Palkkalista</h1>
+            <table id="salaryTable" border="1" cellpadding="5" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Nimi</th><th>Tunnit</th><th>Tuntipalkka</th><th>Brutto</th><th>Vähennykset</th><th>Netto</th><th>Päivä</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </div>
 
