@@ -9,19 +9,68 @@ function showPage(id) {
 }
 
 async function loadEmployees() {
-  const { data, error } = await supabase.from("henkilot").select("*");
   const tbody = document.querySelector("#employee-table tbody");
+  const errorBox = document.querySelector("#error-message");
   tbody.innerHTML = "";
-  if (data) {
-    data.forEach(emp => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${emp.nimi || ""}</td>
-        <td>${emp.email || ""}</td>
-        <td>${emp.osoite || ""}</td>
-        <td>${emp.toimipaikka || ""}</td>
-      `;
-      tbody.appendChild(tr);
-    });
+  errorBox.innerText = "";
+
+  const { data, error } = await supabase.from("henkilot").select("*");
+
+  if (error) {
+    errorBox.innerText = "Virhe ladattaessa tietoja: " + error.message;
+    return;
   }
+
+  data.forEach(emp => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${emp.nimi}</td>
+      <td>${emp.email}</td>
+      <td>${emp.osoite}</td>
+      <td>${emp.toimipaikka}</td>
+      <td><button onclick='editEmployee(${JSON.stringify(emp)})'>Muokkaa</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function showForm() {
+  document.getElementById("form-title").innerText = "Lisää työntekijä";
+  document.getElementById("emp-id").value = "";
+  document.getElementById("emp-nimi").value = "";
+  document.getElementById("emp-email").value = "";
+  document.getElementById("emp-osoite").value = "";
+  document.getElementById("emp-toimipaikka").value = "";
+  document.getElementById("form-modal").style.display = "block";
+}
+
+function editEmployee(emp) {
+  document.getElementById("form-title").innerText = "Muokkaa työntekijää";
+  document.getElementById("emp-id").value = emp.id;
+  document.getElementById("emp-nimi").value = emp.nimi;
+  document.getElementById("emp-email").value = emp.email;
+  document.getElementById("emp-osoite").value = emp.osoite;
+  document.getElementById("emp-toimipaikka").value = emp.toimipaikka;
+  document.getElementById("form-modal").style.display = "block";
+}
+
+function closeForm() {
+  document.getElementById("form-modal").style.display = "none";
+}
+
+async function saveEmployee() {
+  const id = document.getElementById("emp-id").value;
+  const nimi = document.getElementById("emp-nimi").value;
+  const email = document.getElementById("emp-email").value;
+  const osoite = document.getElementById("emp-osoite").value;
+  const toimipaikka = document.getElementById("emp-toimipaikka").value;
+
+  if (id) {
+    await supabase.from("henkilot").update({ nimi, email, osoite, toimipaikka }).eq("id", id);
+  } else {
+    await supabase.from("henkilot").insert([{ nimi, email, osoite, toimipaikka }]);
+  }
+
+  closeForm();
+  loadEmployees();
 }
