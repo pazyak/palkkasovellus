@@ -1,6 +1,7 @@
-const supabase = supabase.createClient(
+const { createClient } = supabase;
+const supa = createClient(
   "https://ltjvqxboupoxurmknouy.supabase.co",
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0anZxeGJvdXBveHVybWtub3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNDM0MjEsImV4cCI6MjA2NDYxOTQyMX0.QFx2O48MZfGSESTCmhFzVdNrmuQELI1hmpumRDBytMo"
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 );
 
 function showPage(id) {
@@ -17,8 +18,8 @@ function showPage(id) {
 async function loadEmployeeDropdown() {
   const select = document.getElementById("employeeSelect");
   if (!select) return;
-  select.innerHTML = '<option value="">-- Valitse työntekijä --</option>';
-  const { data, error } = await supabase.from("henkilot").select("id, nimi");
+  select.innerHTML = '<option value="">-- Valitse --</option>';
+  const { data, error } = await supa.from("henkilot").select("id, nimi");
   if (data) {
     data.forEach(emp => {
       const opt = document.createElement("option");
@@ -32,7 +33,7 @@ async function loadEmployeeDropdown() {
 async function fetchHenkilot() {
   const tbody = document.getElementById("henkilot-body");
   if (!tbody) return;
-  const { data, error } = await supabase.from("henkilot").select("*");
+  const { data, error } = await supa.from("henkilot").select("*");
   tbody.innerHTML = "";
   if (data) {
     data.forEach(h => {
@@ -79,7 +80,7 @@ async function saveEmployee() {
   const data = { nimi, email, osoite, toimipaikka };
   if (id) data.id = id;
 
-  const { error } = await supabase.from("henkilot").upsert(data);
+  const { error } = await supa.from("henkilot").upsert(data);
   if (error) {
     alert("Virhe tallennuksessa");
   } else {
@@ -94,6 +95,6 @@ function closeForm() {
 
 document.addEventListener("DOMContentLoaded", () => {
   showPage("palkanlaskenta");
-  loadEmployeeDropdown();
   fetchHenkilot();
+  loadEmployeeDropdown();
 });
