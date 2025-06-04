@@ -1,0 +1,30 @@
+name: Auto update site
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Pull latest files
+        uses: actions/checkout@v3
+        with:
+          repository: openai-user-content/palkkasovellus-auto
+          token: ${{ secrets.GH_TOKEN }}
+          path: updates
+
+      - name: Copy updated files
+        run: |
+          cp -r updates/* .
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "ChatGPT Auto"
+          git config user.email "chatgpt@auto.dev"
+          git add .
+          git commit -m "Auto update from assistant"
+          git push
