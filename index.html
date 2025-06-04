@@ -14,7 +14,8 @@
             <li onclick="showPage('henkilotiedot')">Henkilötiedot</li>
             <li onclick="showPage('vakiopalkat')">Vakiopalkat</li>
             <li onclick="showPage('ammattiliitot')">Ammattiliitot</li>
-            <li onclick="showPage('raportit')">Raportit</li>
+            <li onclick="showPage('verokortti')">Verokortti</li>
+<li onclick="showPage('raportit')">Raportit</li>
             <li onclick="showPage('asetukset')">Asetukset</li>
         </ul>
     </div>
@@ -75,7 +76,24 @@
                 <li>Eläkemaksulaskelma</li>
             </ul>
         </div>
-        <div id="asetukset" class="page">
+        
+    <div id="verokortti" class="page">
+        <h1>Verokortti</h1>
+        <form class="form-grid">
+            <label>Kuvaus <input type="text"></label>
+            <label>Veronlaskentatapa <input type="text"></label>
+            <label>Tulolaji <input type="text"></label>
+            <label>Verotuskunta <input type="text"></label>
+            <label>Virallinen alkupäivä <input type="date"></label>
+            <label>Alkupäivä <input type="date"></label>
+            <label>Loppupäivä <input type="date"></label>
+            <label>Vuosituloraja <input type="number"></label>
+            <label>Perusprosentti <input type="number"></label>
+            <label>Lisäprosentti <input type="number"></label>
+        </form>
+    </div>
+    <div id="asetukset" class="page">
+
             <h1>Asetukset</h1>
             <p>Yleiset: Tulostuspohjat, Sivuston asetukset, Varmuuskopio</p>
             <p>Sovellusasetukset: Kello, Palkka, Raportti</p>
