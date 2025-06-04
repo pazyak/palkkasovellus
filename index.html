@@ -12,6 +12,8 @@
         <ul>
             <li onclick="showPage('palkanlaskenta')">Palkanlaskenta</li>
             <li onclick="showPage('henkilotiedot')">Henkilötiedot</li>
+            <li onclick="showPage('vakiopalkat')">Vakiopalkat</li>
+            <li onclick="showPage('ammattiliitot')">Ammattiliitot</li>
             <li onclick="showPage('raportit')">Raportit</li>
             <li onclick="showPage('asetukset')">Asetukset</li>
         </ul>
@@ -43,6 +45,24 @@
                 <label>Matkapuhelin <input type="text"></label>
                 <label>BIC <input type="text"></label>
                 <label>IBAN <input type="text"></label>
+            </form>
+        </div>
+        <div id="vakiopalkat" class="page">
+            <h1>Vakiopalkat</h1>
+            <table>
+                <tr><th>Palkkalaji</th><th>á-hinta (€)</th><th>Määrä</th><th>Yksikkö</th><th>Ohita kaava</th><th>Vie laskelmalle</th></tr>
+                <tr><td>RA - Tuntipalkka</td><td>14.00</td><td>120</td><td>tunti</td><td>☐</td><td>☑</td></tr>
+                <tr><td>LA - Lomapalkkavaraus 11,5%</td><td>11.5</td><td>—</td><td>%</td><td>☑</td><td>☑</td></tr>
+                <tr><td>RA - Kassavahti</td><td>0.80</td><td>120</td><td>tunti</td><td>☐</td><td>☑</td></tr>
+            </table>
+        </div>
+        <div id="ammattiliitot" class="page">
+            <h1>Ammattiliitot</h1>
+            <form class="form-grid">
+                <label>Ammattiliitto <input type="text"></label>
+                <label>Liittymispäivä <input type="date"></label>
+                <label>Eroamispäivä <input type="date"></label>
+                <label>Osastonumero <input type="text"></label>
             </form>
         </div>
         <div id="raportit" class="page">
