@@ -1,3 +1,9 @@
+function showPage(id) {
+  const pages = document.querySelectorAll(".page");
+  pages.forEach(p => p.style.display = "none");
+  document.getElementById(id).style.display = "block";
+}
+
 async function fetchHenkilot() {
   const { data, error } = await supabase.from("henkilot").select("*");
   const tbody = document.getElementById("henkilot-body");
