@@ -222,3 +222,65 @@ async function deleteHenkilo(id) {
         loadHenkilot();
     }
 }
+
+let currentEdit = null;
+
+function openEditModal(h) {
+    document.getElementById("editModal").style.display = "block";
+    document.getElementById("editId").value = h.id;
+    document.getElementById("editNimi").value = h.nimi;
+    document.getElementById("editEmail").value = h.email;
+    document.getElementById("editPuhelin").value = h.puhelin || "";
+    document.getElementById("editIban").value = h.iban;
+    document.getElementById("editBban").value = h.bban || "";
+    document.getElementById("editVero").value = h.veroprosentti;
+    document.getElementById("editOsoite").value = h.osoite || "";
+    document.getElementById("editPosti").value = h.postinumero || "";
+    document.getElementById("editToimi").value = h.toimipaikka || "";
+}
+
+function closeModal() {
+    document.getElementById("editModal").style.display = "none";
+}
+
+async function updateHenkilo() {
+    const id = document.getElementById("editId").value;
+    const updated = {
+        nimi: document.getElementById("editNimi").value,
+        email: document.getElementById("editEmail").value,
+        puhelin: document.getElementById("editPuhelin").value,
+        iban: document.getElementById("editIban").value,
+        bban: document.getElementById("editBban").value,
+        veroprosentti: parseFloat(document.getElementById("editVero").value),
+        osoite: document.getElementById("editOsoite").value,
+        postinumero: document.getElementById("editPosti").value,
+        toimipaikka: document.getElementById("editToimi").value,
+    };
+    await supa.from("henkilot").update(updated).eq("id", id);
+    closeModal();
+    loadHenkilot();
+}
+
+// Модифицируем вывод в loadHenkilot
+loadHenkilot = async function () {
+    const tbody = document.querySelector("#henkiloTable tbody");
+    tbody.innerHTML = "";
+    const { data, error } = await supa.from("henkilot").select("*").order("id", { ascending: false });
+    if (data) {
+        data.forEach(h => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${h.nimi}</td>
+                <td>${h.email}</td>
+                <td>${h.iban}</td>
+                <td>${h.veroprosentti}</td>
+                <td>${h.osoite}, ${h.postinumero} ${h.toimipaikka}</td>
+                <td>
+                    <button onclick='openEditModal(${JSON.stringify(h)})'>Muokkaa</button>
+                    <button onclick='deleteHenkilo(${h.id})'>Poista</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+};

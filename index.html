@@ -84,5 +84,27 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script src="script.js"></script>
+
+<!-- Muokkausmodal -->
+<div id="editModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <h2>Muokkaa henkilöä</h2>
+        <form id="editForm" onsubmit="updateHenkilo(); return false;">
+            <input type="hidden" id="editId">
+            <label>Nimi <input type="text" id="editNimi" required></label>
+            <label>Sähköposti <input type="email" id="editEmail" required></label>
+            <label>Puhelin <input type="text" id="editPuhelin"></label>
+            <label>IBAN <input type="text" id="editIban" required></label>
+            <label>BBAN <input type="text" id="editBban"></label>
+            <label>Veroprosentti <input type="number" id="editVero" required></label>
+            <label>Osoite <input type="text" id="editOsoite"></label>
+            <label>Postinumero <input type="text" id="editPosti"></label>
+            <label>Toimipaikka <input type="text" id="editToimi"></label>
+            <button type="submit">Tallenna muutokset</button>
+            <button type="button" onclick="closeModal()">Peruuta</button>
+        </form>
+    </div>
+</div>
 </body>
+
 </html>
