@@ -6,6 +6,7 @@ function showPage(id) {
 window.onload = () => showPage('palkanlaskenta');
 
 function calculateSalary() {
+  const name = document.getElementById('name').value;
   const hours = parseFloat(document.getElementById('hours').value) || 0;
   const rate = parseFloat(document.getElementById('rate').value) || 0;
   const evening = parseFloat(document.getElementById('evening').value) || 0;
@@ -25,4 +26,42 @@ function calculateSalary() {
     <p><strong>Vähennykset:</strong> ${deductions.toFixed(2)} €</p>
     <p><strong>Nettopalkka:</strong> ${netto.toFixed(2)} €</p>
   `;
+
+  window.salaryData = {
+    name,
+    date: new Date().toLocaleDateString('fi-FI'),
+    hours, rate, evening, night, holiday,
+    tax, tyel, unemployment,
+    brutto: brutto.toFixed(2),
+    deductions: deductions.toFixed(2),
+    netto: netto.toFixed(2)
+  };
+}
+
+function downloadPDF() {
+  const data = window.salaryData;
+  if (!data) return alert("Laske ensin palkka.");
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(14);
+  doc.text(`Palkanlaskelma – ${data.name}`, 10, 15);
+  doc.setFontSize(11);
+  doc.text(`Päivämäärä: ${data.date}`, 10, 25);
+  doc.text(`Tunnit: ${data.hours}`, 10, 35);
+  doc.text(`Tuntipalkka: ${data.rate} €`, 10, 42);
+  doc.text(`Iltalisä: ${data.evening} €`, 10, 49);
+  doc.text(`Yölisä: ${data.night} €`, 10, 56);
+  doc.text(`Pyhälisä: ${data.holiday} €`, 10, 63);
+  doc.text(`Veroprosentti: ${data.tax}%`, 10, 70);
+  doc.text(`TyEL: ${data.tyel}%`, 10, 77);
+  doc.text(`Työttömyys: ${data.unemployment}%`, 10, 84);
+
+  doc.setFontSize(13);
+  doc.text(`Bruttopalkka: ${data.brutto} €`, 10, 95);
+  doc.text(`Vähennykset: ${data.deductions} €`, 10, 102);
+  doc.text(`Nettopalkka: ${data.netto} €`, 10, 109);
+
+  doc.save(`palkkalaskelma_${data.name}.pdf`);
 }

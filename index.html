@@ -15,6 +15,7 @@
     <div id="palkanlaskenta" class="page">
         <h1>Palkanlaskenta</h1>
         <form class="form-grid" id="salaryForm" onsubmit="calculateSalary(); return false;">
+            <label>Nimi <input type="text" id="name" required></label>
             <label>Tunnit <input type="number" id="hours" required></label>
             <label>Tuntipalkka (€) <input type="number" id="rate" required></label>
             <label>Iltalisä (€) <input type="number" id="evening" value="0"></label>
@@ -26,7 +27,9 @@
             <button type="submit">Laske palkka</button>
         </form>
         <div id="result" style="margin-top:20px;"></div>
+        <button onclick="downloadPDF()">⭳ Lataa PDF</button>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
