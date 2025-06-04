@@ -23,9 +23,8 @@
   <main id="app">
     <section id="palkanlaskenta" class="page">
       <h2>Palkanlaskenta</h2>
-      <div id="error-message" style="color: red; margin: 1rem 0;"></div>
       <button onclick="showForm()">Lisää työntekijä</button>
-      <table id="employee-table">
+      <table>
         <thead>
           <tr>
             <th>Nimi</th>
@@ -43,6 +42,13 @@
     <section id="raportit" class="page" style="display:none;"><p>Raportit tulossa...</p></section>
     <section id="asetukset" class="page" style="display:none;"><p>Asetukset tulossa...</p></section>
 
+    <section id="kello" class="page" style="display:none;">
+      <h2>Kello</h2>
+      <select id="employeeSelect">
+        <option value="">-- Valitse --</option>
+      </select>
+    </section>
+
     <div id="form-modal" class="modal" style="display:none;">
       <div class="modal-content">
         <h3 id="form-title">Työntekijän tiedot</h3>
@@ -54,15 +60,6 @@
         <button onclick="saveEmployee()">Tallenna</button>
         <button onclick="closeForm()">Peruuta</button>
       </div>
-    </div>
-
-    <div id="kello" class="page" style="display:none;">
-      <h2>Kello – Työaikakirjaus</h2>
-      <label for="employeeSelect">Valitse työntekijä:</label>
-      <select id="employeeSelect" onchange="loadWorklog()">
-        <option value="">-- Valitse --</option>
-      </select>
-      <div id="calendar" style="margin-top: 20px;"></div>
     </div>
   </main>
 

@@ -1,37 +1,29 @@
 body {
-  font-family: sans-serif;
+  font-family: Arial, sans-serif;
+  background: #f0f4f8;
   margin: 0;
   padding: 0;
 }
 header {
-  background: #003580;
+  background-color: #003580;
   color: white;
   padding: 1rem;
 }
 nav ul {
   list-style: none;
-  padding: 0;
   display: flex;
   gap: 1rem;
+  padding: 0;
 }
-nav ul li a {
+nav ul li {
+  display: inline;
+}
+nav a {
   color: white;
   text-decoration: none;
 }
 main {
   padding: 1rem;
-}
-.modal {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-  display: flex; align-items: center; justify-content: center;
-}
-.modal-content {
-  background: white;
-  padding: 2rem;
-  border-radius: 8px;
 }
 table {
   width: 100%;
@@ -41,4 +33,17 @@ table {
 th, td {
   border: 1px solid #ccc;
   padding: 0.5rem;
+}
+.modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 4px;
 }

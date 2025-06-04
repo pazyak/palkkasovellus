@@ -1,38 +1,17 @@
-const { createClient } = supabase;
-const supa = createClient(
+const supa = supabase.createClient(
   "https://ltjvqxboupoxurmknouy.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 );
 
 function showPage(id) {
-  const pages = document.querySelectorAll(".page");
-  pages.forEach(p => p.style.display = "none");
-
-  const target = document.getElementById(id);
-  if (target) target.style.display = "block";
-
+  document.querySelectorAll(".page").forEach(p => p.style.display = "none");
+  document.getElementById(id).style.display = "block";
   if (id === "palkanlaskenta") fetchHenkilot();
   if (id === "kello") loadEmployeeDropdown();
 }
 
-async function loadEmployeeDropdown() {
-  const select = document.getElementById("employeeSelect");
-  if (!select) return;
-  select.innerHTML = '<option value="">-- Valitse --</option>';
-  const { data, error } = await supa.from("henkilot").select("id, nimi");
-  if (data) {
-    data.forEach(emp => {
-      const opt = document.createElement("option");
-      opt.value = emp.id;
-      opt.textContent = emp.nimi;
-      select.appendChild(opt);
-    });
-  }
-}
-
 async function fetchHenkilot() {
   const tbody = document.getElementById("henkilot-body");
-  if (!tbody) return;
   const { data, error } = await supa.from("henkilot").select("*");
   tbody.innerHTML = "";
   if (data) {
@@ -43,11 +22,23 @@ async function fetchHenkilot() {
         <td>${h.email}</td>
         <td>${h.osoite}</td>
         <td>${h.toimipaikka}</td>
-        <td>
-          <button onclick="editHenkilo('${h.id}', '${h.nimi}', '${h.email}', '${h.osoite}', '${h.toimipaikka}')">Muokkaa</button>
-        </td>
+        <td><button onclick="editHenkilo('${h.id}', '${h.nimi}', '${h.email}', '${h.osoite}', '${h.toimipaikka}')">Muokkaa</button></td>
       `;
       tbody.appendChild(row);
+    });
+  }
+}
+
+async function loadEmployeeDropdown() {
+  const select = document.getElementById("employeeSelect");
+  const { data } = await supa.from("henkilot").select("id, nimi");
+  select.innerHTML = '<option value="">-- Valitse --</option>';
+  if (data) {
+    data.forEach(emp => {
+      const opt = document.createElement("option");
+      opt.value = emp.id;
+      opt.textContent = emp.nimi;
+      select.appendChild(opt);
     });
   }
 }
@@ -72,18 +63,16 @@ function editHenkilo(id, nimi, email, osoite, toimipaikka) {
 
 async function saveEmployee() {
   const id = document.getElementById("emp-id").value;
-  const nimi = document.getElementById("emp-nimi").value;
-  const email = document.getElementById("emp-email").value;
-  const osoite = document.getElementById("emp-osoite").value;
-  const toimipaikka = document.getElementById("emp-toimipaikka").value;
-
-  const data = { nimi, email, osoite, toimipaikka };
+  const data = {
+    nimi: document.getElementById("emp-nimi").value,
+    email: document.getElementById("emp-email").value,
+    osoite: document.getElementById("emp-osoite").value,
+    toimipaikka: document.getElementById("emp-toimipaikka").value
+  };
   if (id) data.id = id;
 
   const { error } = await supa.from("henkilot").upsert(data);
-  if (error) {
-    alert("Virhe tallennuksessa");
-  } else {
+  if (!error) {
     document.getElementById("form-modal").style.display = "none";
     fetchHenkilot();
   }
@@ -95,6 +84,4 @@ function closeForm() {
 
 document.addEventListener("DOMContentLoaded", () => {
   showPage("palkanlaskenta");
-  fetchHenkilot();
-  loadEmployeeDropdown();
 });
