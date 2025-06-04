@@ -1,11 +1,11 @@
 // Инициализация Supabase через window.supabase
-const supabaseClient = window.supabase.createClient(
+const supabase = window.supabase.createClient(
   "https://ltjvqxboupoxurmknouy.supabase.co",
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0anZxeGJvdXBveHVybWtub3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNDM0MjEsImV4cCI6MjA2NDYxOTQyMX0.QFx2O48MZfGSESTCmhFzVdNrmuQELI1hmpumRDBytMo"
 );
 
 async function fetchHenkilot() {
-  const { data, error } = await supabaseClient.from("henkilot").select("*");
+  const { data, error } = await supabase.from("henkilot").select("*");
   console.log("Henkilöt:", data, error);
   const tbody = document.querySelector("#employee-table tbody");
   if (!tbody) return;
@@ -66,7 +66,7 @@ async function saveEmployee() {
     toimipaikka: document.getElementById("emp-toimipaikka").value
   };
   if (id) data.id = id;
-  const { error } = await supabaseClient.from("henkilot").upsert(data);
+  const { error } = await supabase.from("henkilot").upsert(data);
   if (!error) {
     closeForm();
     fetchHenkilot();
