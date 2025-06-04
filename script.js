@@ -147,3 +147,7 @@ async function loadWorklog() {
 
   calendar.appendChild(saveBtn);
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  loadEmployeeDropdown();
+});
