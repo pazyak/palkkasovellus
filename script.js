@@ -1,1 +1,3 @@
-console.log('Testi ladattu');
+function showPage(page) {
+    alert("Näytetään sivu: " + page);
+}
