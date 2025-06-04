@@ -15,6 +15,7 @@
             <li onclick="showPage('vakiopalkat')">Vakiopalkat</li>
             <li onclick="showPage('ammattiliitot')">Ammattiliitot</li>
             <li onclick="showPage('verokortti')">Verokortti</li>
+<li onclick="showPage('tyosuhde')">Työsuhde</li>
 <li onclick="showPage('raportit')">Raportit</li>
             <li onclick="showPage('asetukset')">Asetukset</li>
         </ul>
@@ -92,7 +93,24 @@
             <label>Lisäprosentti <input type="number"></label>
         </form>
     </div>
+    
+    <div id="tyosuhde" class="page">
+        <h1>Työsuhdetiedot</h1>
+        <form class="form-grid">
+            <label>Työaikamuoto <input type="text"></label>
+            <label>Työehtosopimus <input type="text"></label>
+            <label>Haastavuusryhmä <input type="text"></label>
+            <label>Palkkaryhmä <input type="text"></label>
+            <label>Laskentaryhmä <input type="text"></label>
+            <label>Lepäävä työsuhde <input type="checkbox"></label>
+            <label>Osa-aikaeläkkeellä <input type="checkbox"></label>
+            <label>Kesälomapäivät <input type="number"></label>
+            <label>Talvilomapäivät <input type="number"></label>
+            <label>Lomakerrointaulukko <input type="text"></label>
+        </form>
+    </div>
     <div id="asetukset" class="page">
+
 
             <h1>Asetukset</h1>
             <p>Yleiset: Tulostuspohjat, Sivuston asetukset, Varmuuskopio</p>
