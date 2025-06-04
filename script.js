@@ -65,3 +65,27 @@ function downloadPDF() {
 
   doc.save(`palkkalaskelma_${data.name}.pdf`);
 }
+
+function loginUser() {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    const users = {
+        'admin@example.com': 'admin123',
+        'matti@example.com': 'matti123'
+    };
+
+    if (users[email] && users[email] === password) {
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        showPage('palkanlaskenta');
+    } else {
+        document.getElementById('login-error').textContent = 'Virheellinen sähköposti tai salasana.';
+    }
+    return false;
+}
+
+function logout() {
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('login').style.display = 'block';
+}

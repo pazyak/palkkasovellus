@@ -7,28 +7,42 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav>
-        <ul>
-            <li onclick="showPage('palkanlaskenta')">Palkanlaskenta</li>
-        </ul>
-    </nav>
-    <div id="palkanlaskenta" class="page">
-        <h1>Palkanlaskenta</h1>
-        <form class="form-grid" id="salaryForm" onsubmit="calculateSalary(); return false;">
-            <label>Nimi <input type="text" id="name" required></label>
-            <label>Tunnit <input type="number" id="hours" required></label>
-            <label>Tuntipalkka (€) <input type="number" id="rate" required></label>
-            <label>Iltalisä (€) <input type="number" id="evening" value="0"></label>
-            <label>Yölisä (€) <input type="number" id="night" value="0"></label>
-            <label>Pyhälisä (€) <input type="number" id="holiday" value="0"></label>
-            <label>Veroprosentti (%) <input type="number" id="tax" value="20"></label>
-            <label>TyEL (%) <input type="number" id="tyel" value="7.15"></label>
-            <label>Työttömyys (%) <input type="number" id="unemployment" value="1.5"></label>
-            <button type="submit">Laske palkka</button>
+    <div id="login" class="page">
+        <h1>Kirjaudu sisään</h1>
+        <form onsubmit="return loginUser()" class="form-grid">
+            <label>Sähköposti <input type="email" id="email" required></label>
+            <label>Salasana <input type="password" id="password" required></label>
+            <button type="submit">Kirjaudu sisään</button>
         </form>
-        <div id="result" style="margin-top:20px;"></div>
-        <button onclick="downloadPDF()">⭳ Lataa PDF</button>
+        <div id="login-error" style="color: red; margin-top: 10px;"></div>
     </div>
+
+    <div id="app" style="display:none;">
+        <nav>
+            <ul>
+                <li onclick="showPage('palkanlaskenta')">Palkanlaskenta</li>
+                <li onclick="logout()">Kirjaudu ulos</li>
+            </ul>
+        </nav>
+        <div id="palkanlaskenta" class="page">
+            <h1>Palkanlaskenta</h1>
+            <form class="form-grid" id="salaryForm" onsubmit="calculateSalary(); return false;">
+                <label>Nimi <input type="text" id="name" required></label>
+                <label>Tunnit <input type="number" id="hours" required></label>
+                <label>Tuntipalkka (€) <input type="number" id="rate" required></label>
+                <label>Iltalisä (€) <input type="number" id="evening" value="0"></label>
+                <label>Yölisä (€) <input type="number" id="night" value="0"></label>
+                <label>Pyhälisä (€) <input type="number" id="holiday" value="0"></label>
+                <label>Veroprosentti (%) <input type="number" id="tax" value="20"></label>
+                <label>TyEL (%) <input type="number" id="tyel" value="7.15"></label>
+                <label>Työttömyys (%) <input type="number" id="unemployment" value="1.5"></label>
+                <button type="submit">Laske palkka</button>
+            </form>
+            <div id="result" style="margin-top:20px;"></div>
+            <button onclick="downloadPDF()">⭳ Lataa PDF</button>
+        </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="script.js"></script>
 </body>
