@@ -7,19 +7,21 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Kloonaa repositorio
+      - name: Kloonaa repositorio (käyttämällä tokenia)
         uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: Päivitä HTML/CSS/JS-tiedostot
         run: |
-          echo "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Test</title></head><body><h1>Päivitetty sisältö</h1></body></html>" > index.html
-          echo "body { font-family: sans-serif; background: #eef; }" > style.css
-          echo "console.log('Uusi versio ladattu');" > script.js
+          echo "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Testi</title></head><body><h1>Tämä on testi</h1></body></html>" > index.html
+          echo "body { background: #e0f7fa; font-family: sans-serif; }" > style.css
+          echo "console.log('Testi ladattu');" > script.js
 
       - name: Commit ja push
         run: |
           git config user.name "ChatGPT Bot"
           git config user.email "chatgpt@auto.dev"
           git add .
-          git commit -m "Automaattinen päivitys (index.html, style.css, script.js)" || echo "Ei muutoksia"
-          git push
+          git commit -m "Auto update from assistant" || echo "Ei muutoksia"
+          git push origin HEAD:main
