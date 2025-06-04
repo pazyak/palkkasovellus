@@ -1,95 +1,146 @@
+
+const { createClient } = supabase;
+const supa = createClient("https://ltjvqxboupoxurmknouy.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0anZxeGJvdXBveHVybWtub3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNDM0MjEsImV4cCI6MjA2NDYxOTQyMX0.QFx2O48MZfGSESTCmhFzVdNrmuQELI1hmpumRDBytMo");
+
 function showPage(id) {
-  const pages = document.querySelectorAll(".page");
-  pages.forEach(p => p.style.display = "none");
-  const target = document.getElementById(id);
-  if (target) target.style.display = "block";
+    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+    document.getElementById(id).style.display = 'block';
 }
+window.onload = () => showPage('palkanlaskenta');
 
-async function loadEmployeeDropdown() {
-  const select = document.getElementById("employeeSelect");
-  if (!select) return;
-  select.innerHTML = '<option value="">-- Valitse --</option>';
-  const { data, error } = await supabase.from("henkilot").select("id, nimi");
-  if (data) {
-    data.forEach(emp => {
-      const opt = document.createElement("option");
-      opt.value = emp.id;
-      opt.textContent = emp.nimi;
-      select.appendChild(opt);
-    });
-  }
-}
+function calculateSalary() {
+  const name = document.getElementById('name').value;
+  const hours = parseFloat(document.getElementById('hours').value) || 0;
+  const rate = parseFloat(document.getElementById('rate').value) || 0;
+  const evening = parseFloat(document.getElementById('evening').value) || 0;
+  const night = parseFloat(document.getElementById('night').value) || 0;
+  const holiday = parseFloat(document.getElementById('holiday').value) || 0;
+  const tax = parseFloat(document.getElementById('tax').value) || 0;
+  const tyel = parseFloat(document.getElementById('tyel').value) || 0;
+  const unemployment = parseFloat(document.getElementById('unemployment').value) || 0;
 
-async function fetchHenkilot() {
-  const { data, error } = await supabase.from("henkilot").select("*");
-  const tbody = document.getElementById("henkilot-body");
-  tbody.innerHTML = "";
-  if (data) {
-    data.forEach(h => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${h.nimi}</td>
-        <td>${h.email}</td>
-        <td>${h.osoite}</td>
-        <td>${h.toimipaikka}</td>
-        <td>
-          <button onclick="editHenkilo('${h.id}', '${h.nimi}', '${h.email}', '${h.osoite}', '${h.toimipaikka}')">Muokkaa</button>
-        </td>
-      `;
-      tbody.appendChild(row);
-    });
-  }
-}
+  const brutto = (hours * rate) + evening + night + holiday;
+  const deductions = brutto * (tax + tyel + unemployment) / 100;
+  const netto = brutto - deductions;
 
-function showAddHenkiloForm() {
-  document.getElementById("henkilo-id").value = "";
-  document.getElementById("nimi").value = "";
-  document.getElementById("email").value = "";
-  document.getElementById("osoite").value = "";
-  document.getElementById("toimipaikka").value = "";
-  document.getElementById("modal-title").innerText = "Lisää työntekijä";
-  document.getElementById("henkilo-modal").style.display = "block";
-}
+  document.getElementById('result').innerHTML = `
+    <h3>Tulos</h3>
+    <p><strong>Bruttopalkka:</strong> ${brutto.toFixed(2)} €</p>
+    <p><strong>Vähennykset:</strong> ${deductions.toFixed(2)} €</p>
+    <p><strong>Nettopalkka:</strong> ${netto.toFixed(2)} €</p>
+  `;
 
-function editHenkilo(id, nimi, email, osoite, toimipaikka) {
-  document.getElementById("henkilo-id").value = id;
-  document.getElementById("nimi").value = nimi;
-  document.getElementById("email").value = email;
-  document.getElementById("osoite").value = osoite;
-  document.getElementById("toimipaikka").value = toimipaikka;
-  document.getElementById("modal-title").innerText = "Muokkaa työntekijää";
-  document.getElementById("henkilo-modal").style.display = "block";
-}
-
-async function saveHenkilo() {
-  const id = document.getElementById("henkilo-id").value;
-  const nimi = document.getElementById("nimi").value;
-  const email = document.getElementById("email").value;
-  const osoite = document.getElementById("osoite").value;
-  const toimipaikka = document.getElementById("toimipaikka").value;
-
-  const henkilo = {
-    nimi,
-    email,
-    osoite,
-    toimipaikka
+  window.salaryData = {
+    name,
+    date: new Date().toLocaleDateString('fi-FI'),
+    hours, rate, evening, night, holiday,
+    tax, tyel, unemployment,
+    brutto: brutto.toFixed(2),
+    deductions: deductions.toFixed(2),
+    netto: netto.toFixed(2)
   };
-
-  if (id) {
-    henkilo.id = id;
-  }
-
-  const { error } = await supabase.from("henkilot").upsert(henkilo);
-  if (error) {
-    alert("Virhe tallennuksessa");
-  } else {
-    document.getElementById("henkilo-modal").style.display = "none";
-    fetchHenkilot();
-  }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  showPage("rekisterit");  // Default page
-  loadEmployeeDropdown();
-  fetchHenkilot();
-});
+function downloadPDF() {
+  const data = window.salaryData;
+  if (!data) return alert("Laske ensin palkka.");
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  doc.setFontSize(14);
+  doc.text(`Palkanlaskelma – ${data.name}`, 10, 15);
+  doc.setFontSize(11);
+  doc.text(`Päivämäärä: ${data.date}`, 10, 25);
+  doc.text(`Tunnit: ${data.hours}`, 10, 35);
+  doc.text(`Tuntipalkka: ${data.rate} €`, 10, 42);
+  doc.text(`Iltalisä: ${data.evening} €`, 10, 49);
+  doc.text(`Yölisä: ${data.night} €`, 10, 56);
+  doc.text(`Pyhälisä: ${data.holiday} €`, 10, 63);
+  doc.text(`Veroprosentti: ${data.tax}%`, 10, 70);
+  doc.text(`TyEL: ${data.tyel}%`, 10, 77);
+  doc.text(`Työttömyys: ${data.unemployment}%`, 10, 84);
+
+  doc.setFontSize(13);
+  doc.text(`Bruttopalkka: ${data.brutto} €`, 10, 95);
+  doc.text(`Vähennykset: ${data.deductions} €`, 10, 102);
+  doc.text(`Nettopalkka: ${data.netto} €`, 10, 109);
+
+  doc.save(`palkkalaskelma_${data.name}.pdf`);
+}
+
+function loginUser() {
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+
+    const users = {
+        'admin@example.com': 'admin123',
+        'matti@example.com': 'matti123'
+    };
+
+    if (users[email] && users[email] === password) {
+        document.getElementById('login').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        showPage('palkanlaskenta');
+    } else {
+        document.getElementById('login-error').textContent = 'Virheellinen sähköposti tai salasana.';
+    }
+    return false;
+}
+
+function logout() {
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('login').style.display = 'block';
+}
+
+async function calculateSalary() {
+    // ... оставим как есть ...
+    const name = document.getElementById('name').value;
+    const hours = parseFloat(document.getElementById('hours').value) || 0;
+    const rate = parseFloat(document.getElementById('rate').value) || 0;
+    const evening = parseFloat(document.getElementById('evening').value) || 0;
+    const night = parseFloat(document.getElementById('night').value) || 0;
+    const holiday = parseFloat(document.getElementById('holiday').value) || 0;
+    const tax = parseFloat(document.getElementById('tax').value) || 0;
+    const tyel = parseFloat(document.getElementById('tyel').value) || 0;
+    const unemployment = parseFloat(document.getElementById('unemployment').value) || 0;
+
+    const brutto = (hours * rate) + evening + night + holiday;
+    const deductions = brutto * (tax + tyel + unemployment) / 100;
+    const netto = brutto - deductions;
+    const date = new Date().toLocaleDateString('fi-FI');
+
+    document.getElementById('result').innerHTML = `
+        <h3>Tulos</h3>
+        <p><strong>Bruttopalkka:</strong> ${brutto.toFixed(2)} €</p>
+        <p><strong>Vähennykset:</strong> ${deductions.toFixed(2)} €</p>
+        <p><strong>Nettopalkka:</strong> ${netto.toFixed(2)} €</p>
+    `;
+
+    await supa.from("palkkalaskelmat").insert([{ 
+        nimi: name,
+        tunnit: hours,
+        tuntipalkka: rate,
+        bruttopalkka: brutto,
+        vahennykset: deductions,
+        nettopalkka: netto,
+        paiva: date
+    }]);
+
+    loadSalaryList();
+
+    window.salaryData = { name, hours, rate, evening, night, holiday, tax, tyel, unemployment, brutto, deductions, netto, date };
+}
+
+async function loadSalaryList() {
+    const tbody = document.querySelector("#salaryTable tbody");
+    tbody.innerHTML = "";
+    let { data, error } = await supa.from("palkkalaskelmat").select("*").order("id", { ascending: false });
+    if (data) {
+        data.forEach(r => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `<td>${r.nimi}</td><td>${r.tunnit}</td><td>${r.tuntipalkka}</td><td>${r.bruttopalkka.toFixed(2)}</td><td>${r.vahennykset.toFixed(2)}</td><td>${r.nettopalkka.toFixed(2)}</td><td>${r.paiva}</td>`;
+            tbody.appendChild(tr);
+        });
+    }
+}

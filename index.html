@@ -1,74 +1,63 @@
+
 <!DOCTYPE html>
 <html lang="fi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Palkkasovellus</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <title>Palkkasovellus</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Palkkasovellus</h1>
-    <nav>
-      <ul>
-        <li><a href="#" onclick="showPage('palkanlaskenta')">Palkanlaskenta</a></li>
-        <li><a href="#" onclick="showPage('rekisterit')">Rekisterit</a></li>
-        <li><a href="#" onclick="showPage('raportit')">Raportit</a></li>
-        <li><a href="#" onclick="showPage('asetukset')">Asetukset</a></li>
-      <li><a href="#" onclick="showPage('kello')">Kello</a></li>
-</ul>
-    </nav>
-  </header>
-
-  <main id="app">
-    <section id="palkanlaskenta" class="page">
-      <h2>Palkanlaskenta</h2>
-      <div id="error-message" style="color: red; margin: 1rem 0;"></div>
-      <button onclick="showForm()">Lisää työntekijä</button>
-      <table id="employee-table">
-        <thead>
-          <tr>
-            <th>Nimi</th>
-            <th>Sähköposti</th>
-            <th>Osoite</th>
-            <th>Toimipaikka</th>
-            <th>Toiminnot</th>
-          </tr>
-        </thead>
-        <tbody id="henkilot-body"></tbody>
-      </table>
-    </section>
-
-    <section id="rekisterit" class="page" style="display:none;"><p>Rekisterit tulossa...</p></section>
-    <section id="raportit" class="page" style="display:none;"><p>Raportit tulossa...</p></section>
-    <section id="asetukset" class="page" style="display:none;"><p>Asetukset tulossa...</p></section>
-
-    <div id="form-modal" class="modal" style="display:none;">
-      <div class="modal-content">
-        <h3 id="form-title">Työntekijän tiedot</h3>
-        <input type="hidden" id="emp-id" />
-        <input type="text" id="emp-nimi" placeholder="Nimi" />
-        <input type="email" id="emp-email" placeholder="Sähköposti" />
-        <input type="text" id="emp-osoite" placeholder="Osoite" />
-        <input type="text" id="emp-toimipaikka" placeholder="Toimipaikka" />
-        <button onclick="saveEmployee()">Tallenna</button>
-        <button onclick="closeForm()">Peruuta</button>
-      </div>
+    <div id="login" class="page">
+        <h1>Kirjaudu sisään</h1>
+        <form onsubmit="return loginUser()" class="form-grid">
+            <label>Sähköposti <input type="email" id="email" required></label>
+            <label>Salasana <input type="password" id="password" required></label>
+            <button type="submit">Kirjaudu sisään</button>
+        </form>
+        <div id="login-error" style="color: red; margin-top: 10px;"></div>
     </div>
-  <div id="kello" class="page" style="display:none;">
-  <h2>Kello – Työaikakirjaus</h2>
-  <label for="employeeSelect">Valitse työntekijä:</label>
-  <select id="employeeSelect" onchange="loadWorklog()">
-    <option value="">-- Valitse --</option>
-  </select>
 
-  <div id="calendar" style="margin-top: 20px;">
-    <!-- Calendar will be rendered here -->
-  </div>
-</div>
-</main>
+    <div id="app" style="display:none;">
+        <nav>
+            <ul>
+                <li onclick="showPage('palkanlaskenta')">Palkanlaskenta</li>
+                <li onclick="showPage('palkkalista')">Palkkalista</li>
+                <li onclick="logout()">Kirjaudu ulos</li>
+            </ul>
+        </nav>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <script src="script.js"></script>
+        <div id="palkanlaskenta" class="page">
+            <h1>Palkanlaskenta</h1>
+            <form class="form-grid" id="salaryForm" onsubmit="calculateSalary(); return false;">
+                <label>Nimi <input type="text" id="name" required></label>
+                <label>Tunnit <input type="number" id="hours" required></label>
+                <label>Tuntipalkka (€) <input type="number" id="rate" required></label>
+                <label>Iltalisä (€) <input type="number" id="evening" value="0"></label>
+                <label>Yölisä (€) <input type="number" id="night" value="0"></label>
+                <label>Pyhälisä (€) <input type="number" id="holiday" value="0"></label>
+                <label>Veroprosentti (%) <input type="number" id="tax" value="20"></label>
+                <label>TyEL (%) <input type="number" id="tyel" value="7.15"></label>
+                <label>Työttömyys (%) <input type="number" id="unemployment" value="1.5"></label>
+                <button type="submit">Laske palkka</button>
+            </form>
+            <div id="result" style="margin-top:20px;"></div>
+            <button onclick="downloadPDF()">⭳ Lataa PDF</button>
+        </div>
+
+        <div id="palkkalista" class="page" style="display:none;">
+            <h1>Palkkalista</h1>
+            <table id="salaryTable" border="1" cellpadding="5" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Nimi</th><th>Tunnit</th><th>Tuntipalkka</th><th>Brutto</th><th>Vähennykset</th><th>Netto</th><th>Päivä</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
