@@ -15,7 +15,8 @@
         <li><a href="#" onclick="showPage('rekisterit')">Rekisterit</a></li>
         <li><a href="#" onclick="showPage('raportit')">Raportit</a></li>
         <li><a href="#" onclick="showPage('asetukset')">Asetukset</a></li>
-      </ul>
+      <li><a href="#" onclick="showPage('kello')">Kello</a></li>
+</ul>
     </nav>
   </header>
 
@@ -54,7 +55,18 @@
         <button onclick="closeForm()">Peruuta</button>
       </div>
     </div>
-  </main>
+  <div id="kello" class="page" style="display:none;">
+  <h2>Kello – Työaikakirjaus</h2>
+  <label for="employeeSelect">Valitse työntekijä:</label>
+  <select id="employeeSelect" onchange="loadWorklog()">
+    <option value="">-- Valitse --</option>
+  </select>
+
+  <div id="calendar" style="margin-top: 20px;">
+    <!-- Calendar will be rendered here -->
+  </div>
+</div>
+</main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <script src="script.js"></script>

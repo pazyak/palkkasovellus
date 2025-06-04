@@ -74,3 +74,76 @@ async function saveEmployee() {
   closeForm();
   loadEmployees();
 }
+async function loadEmployeeDropdown() {
+  const select = document.getElementById("employeeSelect");
+  const { data, error } = await supabase.from("henkilot").select("id, nimi");
+  if (data) {
+    data.forEach(emp => {
+      const opt = document.createElement("option");
+      opt.value = emp.id;
+      opt.textContent = emp.nimi;
+      select.appendChild(opt);
+    });
+  }
+}
+
+async function loadWorklog() {
+  const empId = document.getElementById("employeeSelect").value;
+  const calendar = document.getElementById("calendar");
+  calendar.innerHTML = "";
+
+  if (!empId) return;
+
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+  const { data: worklogs } = await supabase
+    .from("tyoaika")
+    .select("*")
+    .eq("henkilo_id", empId)
+    .gte("paiva", `${year}-${month + 1}-01`)
+    .lte("paiva", `${year}-${month + 1}-${daysInMonth}`);
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dateStr = `${year}-${(month + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+    const log = worklogs.find(w => w.paiva === dateStr);
+
+    const row = document.createElement("div");
+    row.style.margin = "0.5rem 0";
+    row.innerHTML = `
+      <strong>${dateStr}</strong><br>
+      Alku: <input type="time" value="${log?.alku || ""}" id="start-${day}" />
+      Loppu: <input type="time" value="${log?.loppu || ""}" id="end-${day}" />
+      <select id="tila-${day}">
+        <option value="työ" ${log?.tila === "työ" ? "selected" : ""}>Työ</option>
+        <option value="loma" ${log?.tila === "loma" ? "selected" : ""}>Loma</option>
+        <option value="sairas" ${log?.tila === "sairas" ? "selected" : ""}>Sairas</option>
+        <option value="" ${!log?.tila ? "selected" : ""}>-</option>
+      </select>
+    `;
+    calendar.appendChild(row);
+  }
+
+  const saveBtn = document.createElement("button");
+  saveBtn.innerText = "Tallenna kuukauden tiedot";
+  saveBtn.onclick = async () => {
+    const updates = [];
+    for (let day = 1; day <= daysInMonth; day++) {
+      const start = document.getElementById(`start-${day}`).value;
+      const end = document.getElementById(`end-${day}`).value;
+      const tila = document.getElementById(`tila-${day}`).value;
+      const dateStr = `${year}-${(month + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+
+      if (start || end || tila) {
+        updates.push({ henkilo_id: empId, paiva: dateStr, alku: start, loppu: end, tila });
+      }
+    }
+
+    await supabase.from("tyoaika").upsert(updates, { onConflict: ["henkilo_id", "paiva"] });
+    alert("Tallennettu!");
+  };
+
+  calendar.appendChild(saveBtn);
+}
