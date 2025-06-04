@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <title>Palkkasovellus</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Palkkasovellus</h2>
+        <ul>
+            <li onclick="showPage('palkanlaskenta')">Palkanlaskenta</li>
+            <li onclick="showPage('raportit')">Raportit</li>
+            <li onclick="showPage('rekisterit')">Rekisterit</li>
+            <li onclick="showPage('asetukset')">Asetukset</li>
+        </ul>
+    </div>
+    <div class="content">
+        <div id="palkanlaskenta" class="page active">
+            <h1>Palkanlaskenta</h1>
+            <input type="text" placeholder="Syötä työntekijän nimi">
+            <input type="month">
+            <button>Hae</button>
+            <table>
+                <tr><th>Työntekijä</th><th>Tunnit</th><th>Ilta</th><th>Yö</th><th>Pyhä</th><th>Bruttopalkka (€)</th></tr>
+                <tr><td>Anna</td><td>120</td><td>20</td><td>10</td><td>2</td><td>2100</td></tr>
+                <tr><td>Matti</td><td>95</td><td>15</td><td>4</td><td>1</td><td>1700</td></tr>
+            </table>
+        </div>
+        <div id="raportit" class="page"><h1>Raportit</h1></div>
+        <div id="rekisterit" class="page"><h1>Rekisterit</h1></div>
+        <div id="asetukset" class="page"><h1>Asetukset</h1></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

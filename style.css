@@ -1,0 +1,44 @@
+
+body {
+    margin: 0;
+    font-family: sans-serif;
+    display: flex;
+}
+.sidebar {
+    width: 220px;
+    background: #002f6c;
+    color: white;
+    height: 100vh;
+    padding: 20px;
+}
+.sidebar h2 {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+.sidebar ul li {
+    margin: 10px 0;
+    cursor: pointer;
+}
+.content {
+    padding: 20px;
+    flex-grow: 1;
+}
+.page {
+    display: none;
+}
+.page.active {
+    display: block;
+}
+table {
+    margin-top: 20px;
+    border-collapse: collapse;
+    width: 100%;
+}
+th, td {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+}
