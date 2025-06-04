@@ -284,3 +284,66 @@ loadHenkilot = async function () {
         });
     }
 };
+
+// Täytä henkilövalinta
+async function fillHenkiloSelect() {
+    const select = document.getElementById("henkiloSelect");
+    select.innerHTML = '<option value="">Valitse henkilö</option>';
+    const { data } = await supa.from("henkilot").select("*").order("nimi");
+    if (data) {
+        data.forEach(h => {
+            const opt = document.createElement("option");
+            opt.value = h.id;
+            opt.textContent = h.nimi;
+            opt.setAttribute("data-vero", h.veroprosentti);
+            select.appendChild(opt);
+        });
+    }
+}
+
+// Aseta veroprosentti automaattisesti
+document.addEventListener("DOMContentLoaded", () => {
+    const select = document.getElementById("henkiloSelect");
+    if (select) {
+        select.addEventListener("change", () => {
+            const selected = select.options[select.selectedIndex];
+            const vero = selected.getAttribute("data-vero");
+            if (vero) document.getElementById("tax").value = vero;
+        });
+    }
+    fillHenkiloSelect();
+});
+
+// Muokkaa laskennan tallennusta
+async function calculateSalary() {
+    const hours = parseFloat(document.getElementById("hours").value);
+    const rate = parseFloat(document.getElementById("rate").value);
+    const evening = parseFloat(document.getElementById("evening").value);
+    const night = parseFloat(document.getElementById("night").value);
+    const holiday = parseFloat(document.getElementById("holiday").value);
+    const tax = parseFloat(document.getElementById("tax").value);
+    const tyel = parseFloat(document.getElementById("tyel").value);
+    const unemployment = parseFloat(document.getElementById("unemployment").value);
+    const henkilo_id = parseInt(document.getElementById("henkiloSelect").value);
+    const nimi = document.getElementById("henkiloSelect").selectedOptions[0].text;
+
+    const brutto = (hours * rate) + evening + night + holiday;
+    const vahennys = brutto * ((tax + tyel + unemployment) / 100);
+    const netto = brutto - vahennys;
+
+    const result = `
+        <h3>Palkkalaskelma</h3>
+        <p><strong>Nimi:</strong> ${nimi}</p>
+        <p><strong>Bruttopalkka:</strong> €${brutto.toFixed(2)}</p>
+        <p><strong>Vähennykset:</strong> €${vahennys.toFixed(2)}</p>
+        <p><strong>Nettopalkka:</strong> €${netto.toFixed(2)}</p>
+    `;
+    document.getElementById("result").innerHTML = result;
+
+    await supa.from("palkkalaskelmat").insert([{
+        nimi, henkilo_id, tuntipalkka: rate, tunnit: hours,
+        brutto, netto, paiva: new Date().toISOString().split('T')[0]
+    }]);
+
+    loadSalaryList();
+}
