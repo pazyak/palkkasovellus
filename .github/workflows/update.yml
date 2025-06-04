@@ -1,4 +1,4 @@
-name: Auto update site
+name: Päivitys Palkkasovellus
 
 on:
   workflow_dispatch:
@@ -7,24 +7,19 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: Kloonaa repositorio
         uses: actions/checkout@v3
 
-      - name: Pull latest files
-        uses: actions/checkout@v3
-        with:
-          repository: openai-user-content/palkkasovellus-auto
-          token: ${{ secrets.GH_TOKEN }}
-          path: updates
-
-      - name: Copy updated files
+      - name: Päivitä HTML/CSS/JS-tiedostot
         run: |
-          cp -r updates/* .
+          echo "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Test</title></head><body><h1>Päivitetty sisältö</h1></body></html>" > index.html
+          echo "body { font-family: sans-serif; background: #eef; }" > style.css
+          echo "console.log('Uusi versio ladattu');" > script.js
 
-      - name: Commit and push changes
+      - name: Commit ja push
         run: |
-          git config user.name "ChatGPT Auto"
+          git config user.name "ChatGPT Bot"
           git config user.email "chatgpt@auto.dev"
           git add .
-          git commit -m "Auto update from assistant"
+          git commit -m "Automaattinen päivitys (index.html, style.css, script.js)" || echo "Ei muutoksia"
           git push
