@@ -1,1 +1,32 @@
-<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Testi</title></head><body><h1>Tämä on testi</h1></body></html>
+
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <title>Palkkasovellus</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav>
+        <ul>
+            <li onclick="showPage('palkanlaskenta')">Palkanlaskenta</li>
+        </ul>
+    </nav>
+    <div id="palkanlaskenta" class="page">
+        <h1>Palkanlaskenta</h1>
+        <form class="form-grid" id="salaryForm" onsubmit="calculateSalary(); return false;">
+            <label>Tunnit <input type="number" id="hours" required></label>
+            <label>Tuntipalkka (€) <input type="number" id="rate" required></label>
+            <label>Iltalisä (€) <input type="number" id="evening" value="0"></label>
+            <label>Yölisä (€) <input type="number" id="night" value="0"></label>
+            <label>Pyhälisä (€) <input type="number" id="holiday" value="0"></label>
+            <label>Veroprosentti (%) <input type="number" id="tax" value="20"></label>
+            <label>TyEL (%) <input type="number" id="tyel" value="7.15"></label>
+            <label>Työttömyys (%) <input type="number" id="unemployment" value="1.5"></label>
+            <button type="submit">Laske palkka</button>
+        </form>
+        <div id="result" style="margin-top:20px;"></div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
