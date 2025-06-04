@@ -9,7 +9,7 @@ function showPage(id) {
 }
 
 async function loadEmployees() {
-  const { data, error } = await supabase.from("henkilöt").select("*");
+  const { data, error } = await supabase.from("henkilot").select("*");
   const tbody = document.querySelector("#employee-table tbody");
   tbody.innerHTML = "";
   if (data) {
