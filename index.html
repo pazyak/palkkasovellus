@@ -22,6 +22,7 @@
             <ul>
                 <li onclick="showPage('palkanlaskenta')">Palkanlaskenta</li>
                 <li onclick="showPage('palkkalista')">Palkkalista</li>
+                <li onclick="showPage('henkilot')">Henkilöt</li>
                 <li onclick="logout()">Kirjaudu ulos</li>
             </ul>
         </nav>
@@ -55,9 +56,33 @@
                 <tbody></tbody>
             </table>
         </div>
+
+        <div id="henkilot" class="page" style="display:none;">
+            <h1>Henkilöt</h1>
+            <form class="form-grid" id="henkiloForm" onsubmit="saveHenkilo(); return false;">
+                <label>Nimi <input type="text" id="hnimi" required></label>
+                <label>Sähköposti <input type="email" id="hemail" required></label>
+                <label>Puhelin <input type="text" id="hpuhelin"></label>
+                <label>IBAN <input type="text" id="hiban" required></label>
+                <label>BBAN <input type="text" id="hbban"></label>
+                <label>Veroprosentti <input type="number" id="hvero" required></label>
+                <label>Osoite <input type="text" id="hosoite"></label>
+                <label>Postinumero <input type="text" id="hposti"></label>
+                <label>Toimipaikka <input type="text" id="htoimi"></label>
+                <button type="submit">Tallenna</button>
+            </form>
+            <table id="henkiloTable" border="1" cellpadding="5" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Nimi</th><th>Email</th><th>IBAN</th><th>Veropros.</th><th>Osoite</th><th>Poista</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script src="script.js"></script>
 </body>
 </html>

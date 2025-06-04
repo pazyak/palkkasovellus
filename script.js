@@ -2,6 +2,38 @@
 const { createClient } = supabase;
 const supa = createClient("https://ltjvqxboupoxurmknouy.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0anZxeGJvdXBveHVybWtub3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNDM0MjEsImV4cCI6MjA2NDYxOTQyMX0.QFx2O48MZfGSESTCmhFzVdNrmuQELI1hmpumRDBytMo");
 
+// Переход между страницами
+function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+    document.getElementById(id).style.display = 'block';
+    if (id === 'palkkalista') loadSalaryList();
+    if (id === 'henkilot') loadHenkilot();
+}
+
+function logout() {
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('login').style.display = 'block';
+}
+
+function loginUser() {
+    const email = document.getElementById("email").value;
+    const pass = document.getElementById("password").value;
+    if ((email === "admin@example.com" && pass === "admin123") ||
+        (email === "matti@example.com" && pass === "matti123")) {
+        document.getElementById("login").style.display = "none";
+        document.getElementById("app").style.display = "block";
+        showPage("palkanlaskenta");
+        return false;
+    }
+    document.getElementById("login-error").innerText = "Väärä sähköposti tai salasana.";
+    return false;
+}
+
+// Расчёт зарплаты – как в v9
+
+const { createClient } = supabase;
+const supa = createClient("https://ltjvqxboupoxurmknouy.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx0anZxeGJvdXBveHVybWtub3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDkwNDM0MjEsImV4cCI6MjA2NDYxOTQyMX0.QFx2O48MZfGSESTCmhFzVdNrmuQELI1hmpumRDBytMo");
+
 function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
     document.getElementById(id).style.display = 'block';
@@ -142,5 +174,51 @@ async function loadSalaryList() {
             tr.innerHTML = `<td>${r.nimi}</td><td>${r.tunnit}</td><td>${r.tuntipalkka}</td><td>${r.bruttopalkka.toFixed(2)}</td><td>${r.vahennykset.toFixed(2)}</td><td>${r.nettopalkka.toFixed(2)}</td><td>${r.paiva}</td>`;
             tbody.appendChild(tr);
         });
+    }
+}
+
+
+// 👥 Работа с сотрудниками
+async function loadHenkilot() {
+    const tbody = document.querySelector("#henkiloTable tbody");
+    tbody.innerHTML = "";
+    const { data, error } = await supa.from("henkilot").select("*").order("id", { ascending: false });
+    if (data) {
+        data.forEach(h => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${h.nimi}</td>
+                <td>${h.email}</td>
+                <td>${h.iban}</td>
+                <td>${h.veroprosentti}</td>
+                <td>${h.osoite}, ${h.postinumero} ${h.toimipaikka}</td>
+                <td><button onclick="deleteHenkilo(${h.id})">Poista</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+}
+
+async function saveHenkilo() {
+    const obj = {
+        nimi: document.getElementById("hnimi").value,
+        email: document.getElementById("hemail").value,
+        puhelin: document.getElementById("hpuhelin").value,
+        iban: document.getElementById("hiban").value,
+        bban: document.getElementById("hbban").value,
+        veroprosentti: parseFloat(document.getElementById("hvero").value),
+        osoite: document.getElementById("hosoite").value,
+        postinumero: document.getElementById("hposti").value,
+        toimipaikka: document.getElementById("htoimi").value,
+    };
+    await supa.from("henkilot").insert([obj]);
+    loadHenkilot();
+    document.getElementById("henkiloForm").reset();
+}
+
+async function deleteHenkilo(id) {
+    if (confirm("Poistetaanko henkilö?")) {
+        await supa.from("henkilot").delete().eq("id", id);
+        loadHenkilot();
     }
 }
